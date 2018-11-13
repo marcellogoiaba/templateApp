@@ -23,6 +23,10 @@ let userSchema = new Schema({
    createdDate: {
       type: Date,
       default: Date.now()
+   },
+   isDeleted: {
+      type: Boolean,
+      default: false
    }
 })
 

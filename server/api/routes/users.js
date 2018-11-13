@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const User = require('../models/Users');
 
 router.post('/register', (req, res, next) => {
@@ -41,6 +42,46 @@ router.get('/', (req, res, next) => {
     })
 })
 
+router.delete('/:id', (req, res) => {
+   User.findById(req.params.id, (err, user) => {
+      if(err){
+         console.log(err);
+         res.json({
+            message: err
+         })
+      }
+      else{
+         user.isDeleted = true;
+         user.save((err, user) => {
+            if(err){
+               console.log(err);
+            }
+            res.json({content:user})
+         })
+      }
+   })
+}); 
+
+router.put('/:id', (req, res) => {
+   console.log(`Updating user`);
+
+   User.findById(req.params.id,  (err, user) => {
+       if (err) {
+           res.status(404);
+           res.send({message: 'Resource not found'});
+       } else{
+           console.log(req.body);
+           user.set(req.body);
+
+           user.save((err, user) => {
+               console.log(user);
+
+             res.json({content:user});
+           });
+       }
+
+   });
+});
 
 
 
